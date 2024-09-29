@@ -1,9 +1,12 @@
 import { useState } from "react"
+import { useFetchUsers } from "./hooks/use-fetch-users"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [query, setQuery] = useState<string>("test")
 
-  return <></>
+  const { data } = useFetchUsers({ query })
+
+  return <div>Test</div>
 }
 
 export default App
