@@ -2,7 +2,12 @@ import { SearchOutlined } from "@mui/icons-material"
 import { InputAdornment, TextField } from "@mui/material"
 import { ControllerRenderProps } from "react-hook-form"
 
-export const InputField = (props: ControllerRenderProps) => (
+interface Props {
+  innerRef: ControllerRenderProps["ref"]
+  controllerProps: Omit<ControllerRenderProps, "ref">
+}
+
+export const InputField = ({ innerRef, controllerProps }: Props) => (
   <TextField
     label="Search GitHub users"
     type="search"
@@ -15,6 +20,8 @@ export const InputField = (props: ControllerRenderProps) => (
         ),
       },
     }}
-    {...props}
+    sx={{ mt: 1 }}
+    ref={innerRef}
+    {...controllerProps}
   />
 )

@@ -31,7 +31,9 @@ export const Search = ({ handleChangeQuery }: SearchProps) => {
     <Controller
       name={GH_USER_SEARCH_NAME}
       control={control}
-      render={({ field }) => <InputField {...field} />}
+      render={({ field: { ref, ...field } }) => (
+        <InputField innerRef={ref} controllerProps={field} />
+      )}
     />
   )
 }

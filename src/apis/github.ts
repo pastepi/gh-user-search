@@ -1,9 +1,6 @@
-const baseUrl = import.meta.env.VITE_GH_API_URL
+import { FetchUsersParams, FetchUsersResponse } from "./interfaces"
 
-interface FetchUsersParams {
-  query: string
-  pageParam: number
-}
+const baseUrl = import.meta.env.VITE_GH_API_URL
 
 export const fetchUsers = async ({
   query,
@@ -14,21 +11,21 @@ export const fetchUsers = async ({
       ([_, value]) => value
     )
   )
-  const queryParams = new URLSearchParams(params).toString()
+  const queryParams = new URLSearchParams({
+    ...params,
+    per_page: String(100),
+  }).toString()
 
-  try {
-    const response = await fetch(baseUrl + `/search/users?${queryParams}`, {
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-      },
-    })
+  const response = await fetch(baseUrl + `/search/users?${queryParams}`, {
+    method: "GET",
+    headers: {
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  })
 
-    if (!response.ok) {
-      throw new Error("An error has occurred.")
-    }
-
-    return response.json()
-  } catch (error) {
-    return error
+  if (!response.ok) {
+    throw new Error(response.statusText)
   }
+
+  return response.json() as Promise<FetchUsersResponse>
 }
