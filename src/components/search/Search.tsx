@@ -1,39 +1,64 @@
 import { useEffect } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+import { css } from "@emotion/react"
 
-import { GH_USER_SEARCH_NAME } from "../../constants/form"
+import { GH_USER_SEARCH_NAME, searchSchema } from "../../constants/form"
 import { InputField } from "./InputField"
 
-const schema = yup.object({
-  [GH_USER_SEARCH_NAME]: yup.string().required(),
-})
+const formCss = css`
+  display: contents;
+`
 
 interface SearchProps {
   handleChangeQuery: (query: string) => void
 }
 
 export const Search = ({ handleChangeQuery }: SearchProps) => {
-  const { control, watch } = useForm({
+  const {
+    control,
+    watch,
+    handleSubmit,
+    trigger,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       [GH_USER_SEARCH_NAME]: "",
     },
-    resolver: yupResolver(schema),
+    resolver: yupResolver(searchSchema),
+    mode: "all", // Note: could impact performance
   })
   const searchValue = watch(GH_USER_SEARCH_NAME)
 
-  useEffect(() => {
+  const onSubmit: SubmitHandler<{ [GH_USER_SEARCH_NAME]: string }> = async (
+    _
+  ) => {
+    const isValid = await trigger()
+
+    if (!isValid) return
+
     handleChangeQuery(searchValue)
-  }, [searchValue])
+  }
+
+  useEffect(() => {
+    if (errors?.[GH_USER_SEARCH_NAME]) return
+
+    handleChangeQuery(searchValue)
+  }, [searchValue, trigger, errors?.[GH_USER_SEARCH_NAME]])
 
   return (
-    <Controller
-      name={GH_USER_SEARCH_NAME}
-      control={control}
-      render={({ field: { ref, ...field } }) => (
-        <InputField innerRef={ref} controllerProps={field} />
-      )}
-    />
+    <form onSubmit={handleSubmit(onSubmit)} css={formCss}>
+      <Controller
+        name={GH_USER_SEARCH_NAME}
+        control={control}
+        render={({ field: { ref, ...field } }) => (
+          <InputField
+            innerRef={ref}
+            controllerProps={field}
+            error={errors?.[GH_USER_SEARCH_NAME]}
+          />
+        )}
+      />
+    </form>
   )
 }

@@ -15,7 +15,7 @@ const infiniteScrollCss = css`
 
 const loaderSx: ThemeSx = { placeSelf: "center", m: 3 }
 
-const noUsersSx: ThemeSx = { mt: 2, placeSelf: "center" }
+const infoSx: ThemeSx = { mt: 2, placeSelf: "center" }
 
 const usersWrapperSx: ThemeSx = {
   display: "flex",
@@ -24,7 +24,7 @@ const usersWrapperSx: ThemeSx = {
 }
 
 interface Props {
-  usersData: InfiniteData<FetchUsersResponse>
+  usersData: InfiniteData<FetchUsersResponse> | undefined
   isLoading: boolean
   isError: boolean
   isPending: boolean
@@ -50,18 +50,18 @@ export const UserList = ({
 
   if (isError) {
     return (
-      <Typography variant="h5">
+      <Typography sx={infoSx} variant="h5">
         An error has occurred. Please try again later.
       </Typography>
     )
   }
 
-  const { pages: userPages } = usersData
+  const { pages: userPages } = usersData!
 
   /* Note on functional programming: 'isPageEmpty' is matching the function signature of '.every' predicate */
   if (userPages.every(isPageEmpty)) {
     return (
-      <Typography sx={noUsersSx} variant="h5">
+      <Typography sx={infoSx} variant="h5">
         No users found.
       </Typography>
     )
