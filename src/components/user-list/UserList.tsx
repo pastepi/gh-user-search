@@ -23,7 +23,7 @@ const usersWrapperSx: ThemeSx = {
   gap: 1,
 }
 
-interface Props {
+export interface UserListProps {
   usersData: InfiniteData<FetchUsersResponse> | undefined
   isLoading: boolean
   isError: boolean
@@ -39,9 +39,9 @@ export const UserList = ({
   isPending,
   fetchNextPage,
   hasNextPage,
-}: Props) => {
+}: UserListProps) => {
   if (isLoading) {
-    return <CircularProgress size={50} sx={loaderSx} />
+    return <CircularProgress size={50} sx={loaderSx} data-testid="loader" />
   }
 
   if (isPending) {
@@ -71,7 +71,7 @@ export const UserList = ({
     <InfiniteScroll
       loadMore={fetchNextPage}
       hasMore={hasNextPage}
-      loader={<CircularProgress sx={loaderSx} />}
+      loader={<CircularProgress sx={loaderSx} data-testid="loader" />}
       css={infiniteScrollCss}
     >
       <Box sx={usersWrapperSx}>

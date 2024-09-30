@@ -24,7 +24,7 @@ export const UserRow = ({ userData }: Props) => {
   const { avatar_url, login } = userData
 
   return (
-    <Paper elevation={1} sx={wrapperSx}>
+    <Paper elevation={1} sx={wrapperSx} data-testid="userRow">
       <Avatar alt={login} src={avatar_url} />
 
       <Typography variant="h6" component="span" sx={loginSx}>

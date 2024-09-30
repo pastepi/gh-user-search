@@ -47,7 +47,7 @@ export const Search = ({ handleChangeQuery }: SearchProps) => {
   }, [searchValue, trigger, errors?.[GH_USER_SEARCH_NAME]])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} css={formCss}>
+    <form onSubmit={handleSubmit(onSubmit)} css={formCss} role="form">
       <Controller
         name={GH_USER_SEARCH_NAME}
         control={control}
